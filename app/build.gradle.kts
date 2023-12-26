@@ -93,6 +93,9 @@ dependencies {
     // Material Icons
     implementation ("androidx.compose.material:material-icons-core:1.5.4")
 
+    //Gson
+    implementation  ("com.google.code.gson:gson:2.10.1")
+
     //Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.46.1")
     kapt("com.google.dagger:hilt-android-compiler:2.46.1")

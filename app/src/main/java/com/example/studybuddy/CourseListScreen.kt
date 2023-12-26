@@ -86,12 +86,16 @@ fun CourseList(courses: List<Course>) {
                     .padding(8.dp)
             ) {
                 Column(Modifier.fillMaxWidth().padding(8.dp)) {
-                    Text("Title: ${course.title}", fontWeight = FontWeight.Bold)
+                    Text(course.title, fontWeight = FontWeight.Bold, fontSize = 20.sp)
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text("Location: ${course.location}")
-                    Text("Time: ${course.date}")
-                    Text("Date: ${course.date}")
-                    Text("Users: ${course.users}")
+                    Text("Members", fontSize = 10.sp)
+                    Text(course.users, fontWeight = FontWeight.Bold)
+                    Text("Location")
+                    Text(course.location, fontWeight = FontWeight.Bold)
+                    Text("Time")
+                    Text(course.date, fontWeight = FontWeight.Bold)
+                    Text("Date")
+                    Text(course.date, fontWeight = FontWeight.Bold)
                 }
             }
         }

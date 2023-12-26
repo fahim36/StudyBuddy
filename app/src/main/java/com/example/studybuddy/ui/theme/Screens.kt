@@ -1,4 +1,4 @@
-package com.example.bsproject.ui.theme
+package com.example.studybuddy.ui.theme
 
 sealed class Screen(val route : String) {
 

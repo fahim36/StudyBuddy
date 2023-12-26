@@ -1,4 +1,4 @@
-package com.example.studybuddy.ui.theme
+package com.example.studybuddy
 
 import android.content.Context
 import android.util.Patterns

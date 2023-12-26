@@ -34,13 +34,16 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.bsproject.ui.theme.Screen
-import com.example.studybuddy.ui.theme.Utils
+import com.example.studybuddy.ui.theme.Screen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
 @Composable
-fun RegistrationScreen(navController: NavHostController, mAuth: FirebaseAuth) {
+fun RegistrationScreen(
+    navController: NavHostController,
+    mAuth: FirebaseAuth,
+    viewModel: StudyBuddyViewModel
+) {
     val context = LocalContext.current
 
     SignUpScreen(registration = { email, password ->
@@ -55,7 +58,8 @@ fun RegistrationScreen(navController: NavHostController, mAuth: FirebaseAuth) {
                         // Sign in success, update UI with the signed-in user's information
                         val user: FirebaseUser? = mAuth.currentUser
                         // Do something with the user object
-                        navController.navigate(Screen.LoginScreen.route)
+                        viewModel.user.value = user
+                        navController.navigate(Screen.CourseListScreen.route)
                         Toast.makeText(
                             context, "Registration Success.",
                             Toast.LENGTH_SHORT

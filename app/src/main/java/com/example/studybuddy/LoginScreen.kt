@@ -34,14 +34,17 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.bsproject.ui.theme.Screen
-import com.example.studybuddy.ui.theme.Utils
-import com.example.studybuddy.ui.theme.Utils.showToast
+import com.example.studybuddy.ui.theme.Screen
+import com.example.studybuddy.Utils.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
 @Composable
-fun LoginScreen(navController: NavHostController, mAuth: FirebaseAuth) {
+fun LoginScreen(
+    navController: NavHostController,
+    mAuth: FirebaseAuth,
+    viewModel: StudyBuddyViewModel
+) {
     val context = LocalContext.current
     SignInScreen(login = { email, password ->
         if (!Utils.isValidEmail(email)) {
@@ -55,7 +58,9 @@ fun LoginScreen(navController: NavHostController, mAuth: FirebaseAuth) {
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         val user: FirebaseUser? = mAuth.currentUser
+                        user?.uid
                         // Do something with the user object
+                        viewModel.user.value = user
                         Toast.makeText(
                             context, "Login Success.",
                             Toast.LENGTH_SHORT

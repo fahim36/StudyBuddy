@@ -76,6 +76,7 @@ fun LoginScreen(
         }
     },
         registration = {
+            navController.popBackStack()
             navController.navigate(Screen.RegistrationScreen.route)
         })
 }

@@ -19,7 +19,7 @@ class StudyBuddyViewModel @Inject constructor() : ViewModel() {
     val courseList: MutableLiveData<List<Course>> = MutableLiveData()
     private val _isSuccess: MutableLiveData<Boolean> = MutableLiveData()
     val isSuccess: LiveData<Boolean> = _isSuccess
-    val isEmpty: MutableLiveData<Boolean> = MutableLiveData()
+    val isEmpty: MutableLiveData<Boolean> = MutableLiveData(true)
     val db = Firebase.firestore
 
     fun getStudyBuddyData(){
@@ -32,6 +32,7 @@ class StudyBuddyViewModel @Inject constructor() : ViewModel() {
                    val course = Gson().fromJson(Gson().toJson(it), Course::class.java)
                     courseListData.add(course)
                 }
+                isEmpty.postValue(courseListData.isEmpty())
                 courseList.postValue(courseListData)
             }
         }
@@ -41,10 +42,11 @@ class StudyBuddyViewModel @Inject constructor() : ViewModel() {
         courseTitle: String,
         location: String,
         date: String,
+        time: String,
         members: String
     ) {
         user.value?.uid?.let { uid ->
-            val postData = Course(courseTitle,location,date,members)
+            val postData = Course(courseTitle,location,date,time,members,System.currentTimeMillis().toString())
             val courseData = mapOf(
                 courseTitle to postData
             )

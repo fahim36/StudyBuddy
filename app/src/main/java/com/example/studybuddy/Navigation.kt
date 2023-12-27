@@ -26,5 +26,8 @@ fun Navigation(navController: NavController, mAuth: FirebaseAuth) {
         composable(route = Screen.CourseListScreen.route) {
             CourseListScreen(navController = navController, viewModel)
         }
+        composable(route = Screen.CreateCourseScreen.route) {
+            CreateCourseScreen(navController = navController, viewModel)
+        }
     }
 }

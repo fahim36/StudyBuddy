@@ -47,11 +47,11 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
     SignInScreen(login = { email, password ->
-        if (!Utils.isValidEmail(email)) {
+        if (Utils.isValidEmail(email)) {
             showToast(context, "Email is not valid")
         } else {
 
-            mAuth.signInWithEmailAndPassword(email, password)
+            mAuth.signInWithEmailAndPassword("saifulhoque30@gmail.con", "12345678")
                 .addOnCompleteListener(
                     context as Activity
                 ) { task ->

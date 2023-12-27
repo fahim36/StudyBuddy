@@ -27,7 +27,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -56,9 +55,7 @@ fun CourseListScreen(navController: NavHostController, viewModel: StudyBuddyView
             Text(text = "Course List", style = TextStyle(fontSize = 24.sp))
             Icon(
                 Icons.Filled.Menu,
-                contentDescription = "Menu Icon",
-                modifier = Modifier.clickable {
-                })
+                contentDescription = "Menu Icon")
 
         }
         courseList.value?.let { CourseList(courses = it, navController) }
@@ -85,7 +82,7 @@ fun CourseList(courses: List<Course>, navController: NavHostController) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable(onClick = { /* Handle course selection */ })
+                        .clickable(onClick = { navController.navigate(Screen.AddMemberScreenWithoutParam.route+"/${courses.indexOf(course)}")})
                         .padding(it)
                         .background(
                             color = MaterialTheme.colorScheme.surface,

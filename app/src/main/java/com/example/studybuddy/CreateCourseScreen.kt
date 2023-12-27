@@ -52,8 +52,6 @@ fun CreateCourseScreen(
     navController: NavHostController,
     viewModel: StudyBuddyViewModel
 ) {
-
-    val isSuccess = viewModel.isSuccess.observeAsState()
     var title by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
     var date by remember { mutableStateOf("") }
@@ -61,9 +59,6 @@ fun CreateCourseScreen(
     var users by remember { mutableStateOf("") }
     val context = LocalContext.current
 
-    if (isSuccess.value == true) {
-        Utils.showToast(LocalContext.current, "Post Successfully done")
-    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -75,7 +70,8 @@ fun CreateCourseScreen(
                             if(ifFieldsAreEmpty(title,location,date, time,users,context))
                                 return@IconButton
                             viewModel.postDataToFirebase(title,location,date, time,users)
-                            navController.popBackStack() },
+                            Utils.showToast(context, "Successfully done")
+                            navController.navigateUp()},
                         content = { Icon(Icons.Default.Add, contentDescription = "Add") }
                     )
                 }

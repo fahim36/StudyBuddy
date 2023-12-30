@@ -1,9 +1,12 @@
 package com.example.studybuddy
 
 import android.content.Context
+import android.os.Build
 import android.util.Patterns
 import android.widget.Toast
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -19,6 +22,10 @@ object Utils {
 
     fun convertMillisToDate(millis: Long): String {
         val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        return formatter.format(Date(millis))
+    }
+    fun convertMillisToTime(millis: Long): String {
+        val formatter = SimpleDateFormat("hh:mm aa", Locale.getDefault())
         return formatter.format(Date(millis))
     }
 }

@@ -15,20 +15,25 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -38,8 +43,11 @@ import com.example.studybuddy.ui.theme.Screen
 @Composable
 fun CourseListScreen(navController: NavHostController, viewModel: StudyBuddyViewModel) {
 
-    val isEmpty = viewModel.isEmpty.observeAsState()
     val courseList = viewModel.courseList.observeAsState()
+    val searchQuery = remember { mutableStateOf("") }
+    val filteredCourseList = courseList.value?.filter {
+        it.title.contains(searchQuery.value, ignoreCase = true)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -48,20 +56,27 @@ fun CourseListScreen(navController: NavHostController, viewModel: StudyBuddyView
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(15.dp),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "Course List", style = TextStyle(fontSize = 24.sp))
-            Icon(
-                Icons.Filled.Menu,
-                contentDescription = "Menu Icon")
+            Text(
+                text = "Course List",
+                style = TextStyle(fontSize = 24.sp),
+                modifier = Modifier.padding(25.dp)
+            )
+            SearchTextField(searchQuery.value) {
+                searchQuery.value = it
+            }
+//            Icon(
+//                Icons.Filled.Menu,
+//                contentDescription = "Menu Icon")
 
         }
-        courseList.value?.let { CourseList(courses = it, navController) }
+        filteredCourseList?.let { CourseList(courses = it, navController) }
     }
     viewModel.getStudyBuddyData()
-    if (isEmpty.value == true) NoDataUI()
+    if (filteredCourseList != null && filteredCourseList.isEmpty()) NoDataUI()
+
 }
 
 @Composable
@@ -82,7 +97,15 @@ fun CourseList(courses: List<Course>, navController: NavHostController) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable(onClick = { navController.navigate(Screen.AddMemberScreenWithoutParam.route+"/${courses.indexOf(course)}")})
+                        .clickable(onClick = {
+                            navController.navigate(
+                                Screen.AddMemberScreenWithoutParam.route + "/${
+                                    courses.indexOf(
+                                        course
+                                    )
+                                }"
+                            )
+                        })
                         .padding(it)
                         .background(
                             color = MaterialTheme.colorScheme.surface,
@@ -102,9 +125,23 @@ fun CourseList(courses: List<Course>, navController: NavHostController) {
                         Text("Location")
                         Text(course.location, fontWeight = FontWeight.Bold)
                         Text("Time")
-                        Text(course.date, fontWeight = FontWeight.Bold)
+                        Text(course.time, fontWeight = FontWeight.Bold)
                         Text("Date")
                         Text(course.date, fontWeight = FontWeight.Bold)
+                        Text(
+                            text = "Created at", fontSize = 10.sp,
+                            textAlign = TextAlign.End,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                        Text(
+                            text = Utils.convertMillisToDate(course.createdAt.toLong()).plus(" ")
+                                .plus(Utils.convertMillisToTime(course.createdAt.toLong())),
+                            fontSize = 10.sp,
+                            textAlign = TextAlign.End,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
                     }
                 }
             }
@@ -122,6 +159,35 @@ fun NoDataUI() {
             text = "No data available",
             style = MaterialTheme.typography.bodyLarge,
             color = Color.Black
+        )
+    }
+}
+
+@Composable
+fun SearchTextField(
+    text: String,
+    onTextChanged: (String) -> Unit,
+) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        TextField(
+            value = text,
+            onValueChange = { onTextChanged(it) },
+            modifier = Modifier.weight(1f),
+            textStyle = TextStyle(color = Color.Black),
+            placeholder = { Text("Search") },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Black,
+                unfocusedIndicatorColor = Color.Black,
+            ),
+        )
+        Icon(
+            imageVector = Icons.Default.Search,
+            contentDescription = "Search",
+            tint = Color.Black,
+            modifier = Modifier.padding(top = 25.dp, end = 8.dp, start = 5.dp)
         )
     }
 }

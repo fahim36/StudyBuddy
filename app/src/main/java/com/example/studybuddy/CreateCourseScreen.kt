@@ -71,7 +71,7 @@ fun CreateCourseScreen(
     val focusManager = LocalFocusManager.current
 
     val context = LocalContext.current
-
+    users = if(viewModel.isEmpty.value == false) viewModel.courseList.value?.first()?.users  ?: "" else ""
     Scaffold(
         topBar = {
             TopAppBar(

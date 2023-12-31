@@ -33,6 +33,7 @@ class StudyBuddyViewModel @Inject constructor() : ViewModel() {
                     courseListData.add(course)
                 }
                 isEmpty.postValue(courseListData.isEmpty())
+                courseListData.sortByDescending { it.createdAt.toLong() }
                 courseList.postValue(courseListData)
             }
         }

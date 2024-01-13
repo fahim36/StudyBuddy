@@ -1,5 +1,6 @@
 package com.example.studybuddy
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,20 +23,24 @@ class StudyBuddyViewModel @Inject constructor() : ViewModel() {
     val isEmpty: MutableLiveData<Boolean> = MutableLiveData(true)
     val db = Firebase.firestore
 
-    fun getStudyBuddyData(){
+    fun getStudyBuddyData() {
         val courseListData = mutableListOf<Course>()
         CoroutineScope(Dispatchers.IO).launch {
             val db = Firebase.firestore
-            val docRef = user.value?.uid?.let { db.collection("study-buddy").document(it) }
-            docRef?.get()?.addOnSuccessListener { documentSnapshot ->
-                documentSnapshot.data?.values?.forEach{
-                   val course = Gson().fromJson(Gson().toJson(it), Course::class.java)
-                    courseListData.add(course)
+            db.collection("study-buddy")
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    for (document in querySnapshot.documents) {
+                        val data = document.toObject(Course::class.java)
+                        if (data != null) {
+                            courseListData.add(data)
+                        }
+                    }
+                    courseList.postValue(courseListData)
                 }
-                isEmpty.postValue(courseListData.isEmpty())
-                courseListData.sortByDescending { it.createdAt.toLong() }
-                courseList.postValue(courseListData)
-            }
+                .addOnFailureListener { e ->
+                    Log.w("TAG", "Error getting documents", e)
+                }
         }
     }
 
@@ -46,21 +51,32 @@ class StudyBuddyViewModel @Inject constructor() : ViewModel() {
         time: String,
         members: String
     ) {
-        user.value?.uid?.let { uid ->
-            val postData = Course(courseTitle,location,date,time,members,System.currentTimeMillis().toString())
-            val courseData = mapOf(
-                courseTitle to postData
-            )
-            db.collection("study-buddy").document(uid).update(courseData).addOnCompleteListener {
-                if (!it.isSuccessful) {
-                    db.collection("study-buddy").document(uid).set(courseData)
-                        .addOnCompleteListener {
-                            _isSuccess.value = it.isSuccessful
-                        }
-                } else {
-                    _isSuccess.value = it.isSuccessful
-                }
+
+        val postData = Course(
+            courseTitle,
+            location,
+            date,
+            time,
+            members,
+            System.currentTimeMillis().toString()
+        )
+        val courseData = mapOf(
+            "title" to postData.title,
+            "location" to postData.location,
+            "date" to postData.date,
+            "time" to postData.time,
+            "users" to postData.users,
+            "createdAt" to postData.createdAt
+        )
+        db.collection("study-buddy")
+            .add(courseData)
+            .addOnSuccessListener { documentReference ->
+                Log.d("TAG", "DocumentSnapshot written with ID: ${documentReference.id}")
+                // Handle the success scenario
             }
-        }
+            .addOnFailureListener { e ->
+                Log.w("TAG", "Error adding document", e)
+                // Handle the failure scenario
+            }
     }
 }

@@ -1,10 +1,13 @@
 package com.example.studybuddy
 
 import android.app.Activity
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -46,39 +49,76 @@ fun LoginScreen(
     viewModel: StudyBuddyViewModel
 ) {
     val context = LocalContext.current
-    SignInScreen(login = { email, password ->
-        if (!Utils.isValidEmail(email)) {
-            showToast(context, "Email is not valid")
-        } else {
-            mAuth.signInWithEmailAndPassword(email,password)
-                .addOnCompleteListener(
-                    context as Activity
-                ) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        val user: FirebaseUser? = mAuth.currentUser
-                        user?.uid
-                        // Do something with the user object
-                        viewModel.user.value = user
-                        Toast.makeText(
-                            context, "Login Success.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        navController.navigate(Screen.CourseListScreen.route)
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Toast.makeText(
-                            context, "Login failed.${task.exception?.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+    if (Resources.getSystem().configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        SignInScreenLandScape(login = { email, password ->
+            if (!Utils.isValidEmail(email)) {
+                showToast(context, "Email is not valid")
+            } else {
+                mAuth.signInWithEmailAndPassword(email,password)
+                    .addOnCompleteListener(
+                        context as Activity
+                    ) { task ->
+                        if (task.isSuccessful) {
+                            // Sign in success, update UI with the signed-in user's information
+                            val user: FirebaseUser? = mAuth.currentUser
+                            user?.uid
+                            // Do something with the user object
+                            viewModel.user.value = user
+                            Toast.makeText(
+                                context, "Login Success.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            navController.navigate(Screen.CourseListScreen.route)
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(
+                                context, "Login failed.${task.exception?.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
-                }
-        }
-    },
-        registration = {
-            navController.popBackStack()
-            navController.navigate(Screen.RegistrationScreen.route)
-        })
+            }
+        },
+            registration = {
+                navController.popBackStack()
+                navController.navigate(Screen.RegistrationScreen.route)
+            })
+    } else {
+        SignInScreen(login = { email, password ->
+            if (!Utils.isValidEmail(email)) {
+                showToast(context, "Email is not valid")
+            } else {
+                mAuth.signInWithEmailAndPassword(email,password)
+                    .addOnCompleteListener(
+                        context as Activity
+                    ) { task ->
+                        if (task.isSuccessful) {
+                            // Sign in success, update UI with the signed-in user's information
+                            val user: FirebaseUser? = mAuth.currentUser
+                            user?.uid
+                            // Do something with the user object
+                            viewModel.user.value = user
+                            Toast.makeText(
+                                context, "Login Success.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            navController.navigate(Screen.CourseListScreen.route)
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(
+                                context, "Login failed.${task.exception?.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+            }
+        },
+            registration = {
+                navController.popBackStack()
+                navController.navigate(Screen.RegistrationScreen.route)
+            })
+    }
+
 }
 
 @Composable
@@ -134,4 +174,69 @@ fun SignInScreen(login: (String, String) -> Unit, registration: () -> Unit) {
             )
         )
     }
+}
+
+@Composable
+fun SignInScreenLandScape(login: (String, String) -> Unit, registration: () -> Unit) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+Row(verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.Center) {
+
+
+    Column(
+        modifier = Modifier
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(R.drawable.profile_logo),
+            contentDescription = null,
+            modifier = Modifier
+                .size(64.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Welcome", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+    }
+    Column(
+        modifier = Modifier
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = { login(email, password) }) {
+            Text("Login")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "Don't have an account? ",
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+        )
+        ClickableText(
+            text = AnnotatedString("Create Account"),
+            onClick = { registration() },
+            style = TextStyle(
+                color = MaterialTheme.colorScheme.primary,
+                textDecoration = TextDecoration.Underline
+            )
+        )
+    }
+}
 }

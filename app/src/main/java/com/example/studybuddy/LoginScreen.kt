@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -37,8 +38,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.studybuddy.ui.theme.Screen
 import com.example.studybuddy.Utils.showToast
+import com.example.studybuddy.ui.theme.Screen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
@@ -52,9 +53,9 @@ fun LoginScreen(
     if (Resources.getSystem().configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
         SignInScreenLandScape(login = { email, password ->
             if (!Utils.isValidEmail(email)) {
-                showToast(context, "Email is not valid")
+                showToast(context, context.getString(R.string.email_is_not_valid))
             } else {
-                mAuth.signInWithEmailAndPassword(email,password)
+                mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(
                         context as Activity
                     ) { task ->
@@ -65,14 +66,17 @@ fun LoginScreen(
                             // Do something with the user object
                             viewModel.user.value = user
                             Toast.makeText(
-                                context, "Login Success.",
+                                context,
+                                context.getString(R.string.login_success),
                                 Toast.LENGTH_SHORT
                             ).show()
                             navController.navigate(Screen.CourseListScreen.route)
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(
-                                context, "Login failed.${task.exception?.message}",
+                                context,
+                                context
+                                    .getString(R.string.login_failed, task.exception?.message),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -88,7 +92,7 @@ fun LoginScreen(
             if (!Utils.isValidEmail(email)) {
                 showToast(context, "Email is not valid")
             } else {
-                mAuth.signInWithEmailAndPassword(email,password)
+                mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(
                         context as Activity
                     ) { task ->
@@ -99,14 +103,19 @@ fun LoginScreen(
                             // Do something with the user object
                             viewModel.user.value = user
                             Toast.makeText(
-                                context, "Login Success.",
+                                context,
+                                context.getString(R.string.login_success_2),
                                 Toast.LENGTH_SHORT
                             ).show()
                             navController.navigate(Screen.CourseListScreen.route)
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(
-                                context, "Login failed.${task.exception?.message}",
+                                context,
+                                context.getString(
+                                    R.string.login_failed_2,
+                                    task.exception?.message
+                                ),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -125,7 +134,7 @@ fun LoginScreen(
 fun SignInScreen(login: (String, String) -> Unit, registration: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -141,32 +150,36 @@ fun SignInScreen(login: (String, String) -> Unit, registration: () -> Unit) {
                 .align(Alignment.CenterHorizontally)
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Welcome", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Text(
+            text = context.getString(R.string.welcome),
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") }
+            label = { Text(stringResource(R.string.email)) }
         )
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.password)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = { login(email, password) }) {
-            Text("Login")
+            Text(stringResource(R.string.login_text))
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Don't have an account? ",
+            text = stringResource(R.string.don_t_have_an_account),
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
         )
         ClickableText(
-            text = AnnotatedString("Create Account"),
+            text = AnnotatedString(stringResource(R.string.create_account)),
             onClick = { registration() },
             style = TextStyle(
                 color = MaterialTheme.colorScheme.primary,
@@ -180,63 +193,70 @@ fun SignInScreen(login: (String, String) -> Unit, registration: () -> Unit) {
 fun SignInScreenLandScape(login: (String, String) -> Unit, registration: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-Row(verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.Center) {
-
-
-    Column(
-        modifier = Modifier
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
-        Image(
-            painter = painterResource(R.drawable.profile_logo),
-            contentDescription = null,
+
+
+        Column(
             modifier = Modifier
-                .size(64.dp)
-                .align(Alignment.CenterHorizontally)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Welcome", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-    }
-    Column(
-        modifier = Modifier
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { login(email, password) }) {
-            Text("Login")
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Don't have an account? ",
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-        )
-        ClickableText(
-            text = AnnotatedString("Create Account"),
-            onClick = { registration() },
-            style = TextStyle(
-                color = MaterialTheme.colorScheme.primary,
-                textDecoration = TextDecoration.Underline
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(R.drawable.profile_logo),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(64.dp)
+                    .align(Alignment.CenterHorizontally)
             )
-        )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(R.string.welcome),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Column(
+            modifier = Modifier
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text(stringResource(R.string.email)) }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text(stringResource(R.string.password)) },
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = { login(email, password) }) {
+                Text(stringResource(R.string.login_text))
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(R.string.don_t_have_an_account),
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+            )
+            ClickableText(
+                text = AnnotatedString(stringResource(R.string.create_account)),
+                onClick = { registration() },
+                style = TextStyle(
+                    color = MaterialTheme.colorScheme.primary,
+                    textDecoration = TextDecoration.Underline
+                )
+            )
+        }
     }
-}
 }

@@ -14,16 +14,16 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun Navigation(navController: NavController, mAuth: FirebaseAuth) {
-    val viewModel : StudyBuddyViewModel = hiltViewModel()
+    val viewModel: StudyBuddyViewModel = hiltViewModel()
     NavHost(
         navController = navController as NavHostController,
         startDestination = Screen.LoginScreen.route
     ) {
         composable(route = Screen.LoginScreen.route) {
-            LoginScreen(navController = navController, mAuth,viewModel)
+            LoginScreen(navController = navController, mAuth, viewModel)
         }
         composable(route = Screen.RegistrationScreen.route) {
-            RegistrationScreen(navController = navController, mAuth , viewModel)
+            RegistrationScreen(navController = navController, mAuth, viewModel)
         }
         composable(route = Screen.CourseListScreen.route) {
             CourseListScreen(navController = navController, viewModel)
@@ -33,9 +33,13 @@ fun Navigation(navController: NavController, mAuth: FirebaseAuth) {
         }
         composable(route = Screen.AddMemberScreen.route,
             arguments = listOf(
-            navArgument("index") { type = NavType.IntType }
-        )) {
-            AddMemberScreen( index = (it.arguments?.getInt("index", 0) ?: 0),navController = navController, viewModel)
+                navArgument("index") { type = NavType.IntType }
+            )) {
+            AddMemberScreen(
+                index = (it.arguments?.getInt("index", 0) ?: 0),
+                navController = navController,
+                viewModel
+            )
         }
     }
 }

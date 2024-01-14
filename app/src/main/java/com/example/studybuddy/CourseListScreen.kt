@@ -31,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -60,7 +61,7 @@ fun CourseListScreen(navController: NavHostController, viewModel: StudyBuddyView
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Course List",
+                text = stringResource(R.string.course_list),
                 style = TextStyle(fontSize = 24.sp),
                 modifier = Modifier.padding(25.dp)
             )
@@ -85,7 +86,7 @@ fun CourseList(courses: List<Course>, navController: NavHostController) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { navController.navigate(Screen.CreateCourseScreen.route) },
-                content = { Icon(Icons.Filled.Add, "Add") },
+                content = { Icon(Icons.Filled.Add, stringResource(R.string.add)) },
                 containerColor = Color.White,
                 contentColor = Color.Black
             )
@@ -120,16 +121,16 @@ fun CourseList(courses: List<Course>, navController: NavHostController) {
                     ) {
                         Text(course.title, fontWeight = FontWeight.Bold, fontSize = 20.sp)
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text("Members", fontSize = 10.sp)
+                        Text(stringResource(R.string.members), fontSize = 10.sp)
                         Text(course.users, fontWeight = FontWeight.Bold)
-                        Text("Location")
+                        Text(stringResource(R.string.location))
                         Text(course.location, fontWeight = FontWeight.Bold)
-                        Text("Time")
+                        Text(stringResource(R.string.time))
                         Text(course.time, fontWeight = FontWeight.Bold)
-                        Text("Date")
+                        Text(stringResource(R.string.date))
                         Text(course.date, fontWeight = FontWeight.Bold)
                         Text(
-                            text = "Created at", fontSize = 10.sp,
+                            text = stringResource(R.string.created_at), fontSize = 10.sp,
                             textAlign = TextAlign.End,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -156,7 +157,7 @@ fun NoDataUI() {
         modifier = Modifier.fillMaxSize()
     ) {
         Text(
-            text = "No data available",
+            text = stringResource(R.string.no_data_available),
             style = MaterialTheme.typography.bodyLarge,
             color = Color.Black
         )
@@ -174,7 +175,7 @@ fun SearchTextField(
             onValueChange = { onTextChanged(it) },
             modifier = Modifier.weight(1f),
             textStyle = TextStyle(color = Color.Black),
-            placeholder = { Text("Search") },
+            placeholder = { Text(stringResource(R.string.search)) },
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
@@ -185,7 +186,7 @@ fun SearchTextField(
         )
         Icon(
             imageVector = Icons.Default.Search,
-            contentDescription = "Search",
+            contentDescription = stringResource(R.string.search),
             tint = Color.Black,
             modifier = Modifier.padding(top = 25.dp, end = 8.dp, start = 5.dp)
         )

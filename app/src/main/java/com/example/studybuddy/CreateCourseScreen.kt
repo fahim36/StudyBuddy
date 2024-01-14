@@ -1,6 +1,7 @@
 package com.example.studybuddy
 
 import android.content.Context
+import android.content.res.Resources
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -44,6 +45,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -71,11 +73,12 @@ fun CreateCourseScreen(
     val focusManager = LocalFocusManager.current
 
     val context = LocalContext.current
-    users = if(viewModel.isEmpty.value == false) viewModel.courseList.value?.first()?.users  ?: "" else ""
+    users = if (viewModel.isEmpty.value == false) viewModel.courseList.value?.first()?.users
+        ?: "" else ""
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Add new course") },
+                title = { Text(stringResource(R.string.add_new_course)) },
                 Modifier.background(MaterialTheme.colorScheme.primary),
                 actions = {
                     IconButton(
@@ -83,10 +86,18 @@ fun CreateCourseScreen(
                             if (ifFieldsAreEmpty(title, location, date, time, users, context))
                                 return@IconButton
                             viewModel.postDataToFirebase(title, location, date, time, users)
-                            Utils.showToast(context, "Successfully done")
+                            Utils.showToast(
+                                context,
+                                context.getString(R.string.successfully_done)
+                            )
                             navController.navigateUp()
                         },
-                        content = { Icon(Icons.Default.Add, contentDescription = "Add") }
+                        content = {
+                            Icon(
+                                Icons.Default.Add,
+                                contentDescription = stringResource(R.string.add)
+                            )
+                        }
                     )
                 }
 
@@ -109,7 +120,7 @@ fun CreateCourseScreen(
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
-                    label = { Text("Title") },
+                    label = { Text(stringResource(R.string.title)) },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = Color.White,
                         unfocusedContainerColor = Color.White,
@@ -121,7 +132,7 @@ fun CreateCourseScreen(
                 OutlinedTextField(
                     value = location,
                     onValueChange = { location = it },
-                    label = { Text("Location") },
+                    label = { Text(stringResource(R.string.location)) },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = Color.White,
                         unfocusedContainerColor = Color.White,
@@ -133,7 +144,7 @@ fun CreateCourseScreen(
                 OutlinedTextField(
                     value = date,
                     onValueChange = { date = it },
-                    label = { Text("Date") },
+                    label = { Text(stringResource(R.string.date)) },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = Color.White,
                         unfocusedContainerColor = Color.White,
@@ -152,7 +163,7 @@ fun CreateCourseScreen(
                 OutlinedTextField(
                     value = time,
                     onValueChange = { time = it },
-                    label = { Text("Time") },
+                    label = { Text(stringResource(R.string.time)) },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = Color.White,
                         unfocusedContainerColor = Color.White,
@@ -170,7 +181,7 @@ fun CreateCourseScreen(
                 OutlinedTextField(
                     value = users,
                     onValueChange = { users = it },
-                    label = { Text("Users") },
+                    label = { Text(stringResource(R.string.users)) },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = Color.White,
                         unfocusedContainerColor = Color.White,
@@ -200,7 +211,7 @@ fun CreateCourseScreen(
                         Log.d("TAG", "CreateCourseScreen: ${dateState.selectedDateMillis}")
                     }
                 ) {
-                    Text("OK")
+                    Text(stringResource(R.string.ok))
                 }
             },
             dismissButton = {
@@ -210,7 +221,7 @@ fun CreateCourseScreen(
                         isDateVisible = false
                     }
                 ) {
-                    Text("CANCEL")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         ) {
@@ -234,14 +245,14 @@ fun CreateCourseScreen(
             focusManager.clearFocus(true)
 
         }) {
-            TimePicker(state = timeState,)
+            TimePicker(state = timeState)
         }
     }
 }
 
 @Composable
 fun TimePickerDialog(
-    title: String = "Select Time",
+    title: String = stringResource(R.string.select_time),
     onCancel: () -> Unit,
     onConfirm: () -> Unit,
     toggle: @Composable () -> Unit = {},
@@ -285,10 +296,10 @@ fun TimePickerDialog(
                     Spacer(modifier = Modifier.weight(1f))
                     TextButton(
                         onClick = onCancel
-                    ) { Text("Cancel") }
+                    ) { Text(stringResource(R.string.cancel)) }
                     TextButton(
                         onClick = onConfirm
-                    ) { Text("OK") }
+                    ) { Text(stringResource(R.string.ok)) }
                 }
             }
         }
@@ -306,19 +317,36 @@ fun ifFieldsAreEmpty(
 ): Boolean {
     var isEmpty = false
     if (title.isEmpty()) {
-        Toast.makeText(context, "Title cannot be empty", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context,
+            context.getString(R.string.title_cannot_be_empty), Toast.LENGTH_SHORT
+        ).show()
         isEmpty = true
     } else if (location.isEmpty()) {
-        Toast.makeText(context, "Location cannot be empty", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context,
+            context.getString(R.string.location_cannot_be_empty), Toast.LENGTH_SHORT
+        ).show()
         isEmpty = true
     } else if (date.isEmpty()) {
-        Toast.makeText(context, "Date cannot be empty", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context,
+            context.getString(R.string.date_cannot_be_empty),
+            Toast.LENGTH_SHORT
+        ).show()
         isEmpty = true
     } else if (time.isEmpty()) {
-        Toast.makeText(context, "Time cannot be empty", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context,
+            context.getString(R.string.time_cannot_be_empty),
+            Toast.LENGTH_SHORT
+        ).show()
         isEmpty = true
     } else if (users.isEmpty()) {
-        Toast.makeText(context, "Users cannot be empty", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context,
+            context.getString(R.string.users_cannot_be_empty), Toast.LENGTH_SHORT
+        ).show()
         isEmpty = true
     }
 

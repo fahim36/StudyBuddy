@@ -79,29 +79,26 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
 
     //Navigation
-    implementation ("androidx.navigation:navigation-fragment-ktx:2.7.6")
-    implementation ("androidx.navigation:navigation-ui-ktx:2.7.6")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
 
     //Compose Dependencies
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
-    implementation ("androidx.compose.runtime:runtime-livedata:1.5.4")
-    implementation ("androidx.navigation:navigation-compose:2.7.6")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+    implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
-    implementation ("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.11.0")
 
     // Material Icons
-    implementation ("androidx.compose.material:material-icons-core:1.5.4")
+    implementation("androidx.compose.material:material-icons-core:1.5.4")
 
     //Gson
-    implementation  ("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.code.gson:gson:2.10.1")
 
     //Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.46.1")
     kapt("com.google.dagger:hilt-android-compiler:2.46.1")
-
-
-
 
 
 }

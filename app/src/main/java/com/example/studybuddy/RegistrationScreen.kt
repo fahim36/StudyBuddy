@@ -1,6 +1,7 @@
 package com.example.studybuddy
 
 import android.app.Activity
+import android.content.res.Resources
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -48,7 +50,7 @@ fun RegistrationScreen(
 
     SignUpScreen(registration = { email, password ->
         if (!Utils.isValidEmail(email)) {
-            Utils.showToast(context, "Email is not valid")
+            Utils.showToast(context, context.getString(R.string.email_is_not_valid))
         } else {
             mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(
@@ -61,13 +63,13 @@ fun RegistrationScreen(
                         viewModel.user.value = user
                         navController.navigate(Screen.CourseListScreen.route)
                         Toast.makeText(
-                            context, "Registration Success.",
+                            context, context.getString(R.string.registration_success),
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
                         // If sign in fails, display a message to the user.
                         Toast.makeText(
-                            context, "Registration failed.",
+                            context, context.getString(R.string.registration_failed),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -106,13 +108,13 @@ fun SignUpScreen(registration: (String, String) -> Unit, gotoLogin: () -> Unit) 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") }
+            label = { Text(stringResource(R.string.email)) }
         )
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.password)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
@@ -122,11 +124,11 @@ fun SignUpScreen(registration: (String, String) -> Unit, gotoLogin: () -> Unit) 
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Already have an account? ",
+            text = stringResource(R.string.already_have_an_account),
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
         )
         ClickableText(
-            text = AnnotatedString("Go to Login"),
+            text = AnnotatedString(stringResource(R.string.go_to_login)),
             onClick = { gotoLogin() },
             style = TextStyle(
                 color = MaterialTheme.colorScheme.primary,

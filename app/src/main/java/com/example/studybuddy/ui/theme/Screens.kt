@@ -1,6 +1,6 @@
 package com.example.studybuddy.ui.theme
 
-sealed class Screen(val route : String) {
+sealed class Screen(val route: String) {
 
     object LoginScreen : Screen("login_screen")
     object RegistrationScreen : Screen("registration_screen")

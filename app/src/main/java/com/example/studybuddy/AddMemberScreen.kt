@@ -1,5 +1,6 @@
 package com.example.studybuddy
 
+import android.content.res.Resources
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
@@ -43,13 +45,16 @@ fun AddMemberScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Add Member") },
+                title = { Text(stringResource(R.string.add_member)) },
                 Modifier.background(MaterialTheme.colorScheme.primary),
                 actions = {
                     IconButton(
                         onClick = {
                             if (users?.isEmpty() == true) {
-                                Utils.showToast(context, "Users Cant be empty")
+                                Utils.showToast(
+                                    context,
+                                    context.getString(R.string.users_cant_be_empty)
+                                )
                                 return@IconButton
                             } else {
                                 if (course != null) {
@@ -61,11 +66,19 @@ fun AddMemberScreen(
                                         users!!
                                     )
                                 }
-                                Utils.showToast(context, "Successfully done")
+                                Utils.showToast(
+                                    context,
+                                    context.getString(R.string.successfully_done)
+                                )
                                 navController.navigateUp()
                             }
                         },
-                        content = { Icon(Icons.Default.Add, contentDescription = "Add") }
+                        content = {
+                            Icon(
+                                Icons.Default.Add,
+                                contentDescription = stringResource(R.string.add)
+                            )
+                        }
                     )
                 }
 
@@ -81,9 +94,9 @@ fun AddMemberScreen(
             verticalArrangement = Arrangement.Top
         ) {
             TextField(
-                value = users?:"",
+                value = users ?: "",
                 onValueChange = { users = it },
-                label = { Text("Users") },
+                label = { Text(stringResource(R.string.users)) },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White,

@@ -1,6 +1,5 @@
 package com.example.studybuddy
 
-import android.content.res.Resources
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -58,12 +57,13 @@ fun AddMemberScreen(
                                 return@IconButton
                             } else {
                                 if (course != null) {
-                                    viewModel.postDataToFirebase(
+                                    viewModel.updateDataToFirebase(
                                         course.title,
                                         course.location,
                                         course.date,
                                         course.time,
-                                        users!!
+                                        users!!,
+                                        course.createdAt
                                     )
                                 }
                                 Utils.showToast(

@@ -78,4 +78,51 @@ class StudyBuddyViewModel @Inject constructor() : ViewModel() {
                 // Handle the failure scenario
             }
     }
+
+    fun updateDataToFirebase(
+        courseTitle: String,
+        location: String,
+        date: String,
+        time: String,
+        members: String,
+        createdAt: String
+    ) {
+
+        val postData = Course(
+            courseTitle,
+            location,
+            date,
+            time,
+            members,
+            createdAt
+        )
+        val courseData = mapOf(
+            "title" to postData.title,
+            "location" to postData.location,
+            "date" to postData.date,
+            "time" to postData.time,
+            "users" to postData.users,
+            "createdAt" to postData.createdAt
+        )
+        val coursesCollection = db.collection("study-buddy")
+        val query = coursesCollection.whereEqualTo("title", courseTitle)
+
+        query.get().addOnSuccessListener { documents ->
+            for (document in documents) {
+                coursesCollection.document(document.id).update(courseData)
+                    .addOnSuccessListener {
+                        Log.d("TAG", "DocumentSnapshot successfully updated!")
+                        // Handle the success scenario
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w("TAG", "Error updating document", e)
+                        // Handle the failure scenario
+                    }
+            }
+        }
+            .addOnFailureListener { e ->
+                Log.w("TAG", "Error getting documents", e)
+                // Handle the failure scenario
+            }
+    }
 }

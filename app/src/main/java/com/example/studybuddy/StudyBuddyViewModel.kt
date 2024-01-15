@@ -105,7 +105,7 @@ class StudyBuddyViewModel @Inject constructor() : ViewModel() {
             "createdAt" to postData.createdAt
         )
         val coursesCollection = db.collection("study-buddy")
-        val query = coursesCollection.whereEqualTo("title", courseTitle)
+        val query = coursesCollection.whereEqualTo("createdAt", createdAt)
 
         query.get().addOnSuccessListener { documents ->
             for (document in documents) {
